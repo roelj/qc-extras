@@ -29,6 +29,7 @@ cd curl-7.86.0
 ./configure CC=${CROSS_GCC} --host=armv7 --prefix=$(pwd)/build-output --without-ssl
 make
 make install
+cd ..
 
 ## LIBMICROHTTPD
 # -----------------------------------------------------------------------------
@@ -41,6 +42,7 @@ cd libmicrohttpd-0.9.75
 ./configure CC=${CROSS_GCC} --host=armv7 --prefix=$(pwd)/build-output --enable-itc=pipe
 make
 make install
+cd ..
 
 ## PROTOBUF-C
 # -----------------------------------------------------------------------------
@@ -51,4 +53,7 @@ curl -LO https://github.com/protobuf-c/protobuf-c/releases/download/v1.4.1/proto
 tar axvf protobuf-c-1.4.1.tar.gz
 cd protobuf-c-1.4.1
 ./configure CC=${CROSS_GCC} --host=armv7 --prefix=$(pwd)/build-output --disable-protoc
+make
+make install
+cd ..
 
