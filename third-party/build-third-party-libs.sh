@@ -26,6 +26,29 @@ CROSS_GCC=$(find /opt/analog/cces-linux-add-in -name "arm-linux-gnueabi-gcc")
 curl -LO https://curl.se/download/curl-7.86.0.tar.gz
 tar axvf curl-7.86.0.tar.gz
 cd curl-7.86.0
-./configure CC=${CROSS_GCC} --host=armv7 --prefix=$(pwd)/build-output --without-ssl --prefix=$(pwd)/build-output
+./configure CC=${CROSS_GCC} --host=armv7 --prefix=$(pwd)/build-output --without-ssl
 make
 make install
+
+## LIBMICROHTTPD
+# -----------------------------------------------------------------------------
+# Build without eventfd because it seems the kernel on the Quad Cortex doesn't
+# support/implement these functions.
+
+curl -LO https://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-0.9.75.tar.gz
+tar axvf libmicrohttpd-0.9.75.tar.gz
+cd libmicrohttpd-0.9.75
+./configure CC=${CROSS_GCC} --host=armv7 --prefix=$(pwd)/build-output --enable-itc=pipe
+make
+make install
+
+## PROTOBUF-C
+# -----------------------------------------------------------------------------
+# Disable the dependency on protobuf.  We can pre-generate and include the C/H
+# files for the protobuf structures we need.
+
+curl -LO https://github.com/protobuf-c/protobuf-c/releases/download/v1.4.1/protobuf-c-1.4.1.tar.gz
+tar axvf protobuf-c-1.4.1.tar.gz
+cd protobuf-c-1.4.1
+./configure CC=${CROSS_GCC} --host=armv7 --prefix=$(pwd)/build-output --disable-protoc
+
