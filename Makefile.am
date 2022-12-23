@@ -18,8 +18,12 @@ SUBDIRS               = .
 
 bin_PROGRAMS          = qc-controller
 qc_controller_CFLAGS  = -I$(top_srcdir)/third-party/curl-7.86.0/build-output/include \
-                        -I$(top_srcdir)/include
-qc_controller_LDADD   = -L$(top_srcdir)/third-party/curl-7.86.0/build-output/lib -lcurl
+                        -I${top_srcdir}/third-party/libmicrohttpd-0.9.75/build-output/include \
+                        -I${top_srcdir}/third-party/protobuf-c-1.4.1/build-output/include \
+                        -I$(top_srcdir)/include -pthread
+qc_controller_LDADD   = -L$(top_srcdir)/third-party/curl-7.86.0/build-output/lib -lcurl \
+                        -l:${top_srcdir}/third-party/libmicrohttpd-0.9.75/build-output/lib/libmicrohttpd.a \
+                        -l:${top_srcdir}/third-party/protobuf-c-1.4.1/build-output/lib/libprotobuf-c.a
 qc_controller_SOURCES = src/main.c                     \
                         src/runtime_configuration.c    \
                         src/ui.c
