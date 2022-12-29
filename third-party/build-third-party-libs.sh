@@ -16,6 +16,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 CROSS_GCC=$(find /opt/analog/cces-linux-add-in -name "arm-linux-gnueabi-gcc")
+BASE_DIR="$(pwd)"
 
 ## LIBCURL
 # -----------------------------------------------------------------------------
@@ -53,6 +54,27 @@ curl -LO https://github.com/protobuf-c/protobuf-c/releases/download/v1.4.1/proto
 tar axvf protobuf-c-1.4.1.tar.gz
 cd protobuf-c-1.4.1
 ./configure CC=${CROSS_GCC} --host=armv7 --prefix=$(pwd)/build-output --disable-protoc
+make
+make install
+cd ..
+
+## Extras
+# -----------------------------------------------------------------------------
+curl -LO https://ftp.gnu.org/pub/gnu/ncurses/ncurses-6.3.tar.gz
+tar axvf ncurses-6.3.tar.gz
+cd ncurses-6.3
+./configure CC=${CROSS_GCC} --host=armv7 --prefix=$(pwd)/build-output
+make
+make install
+cd ..
+
+curl -LO https://ftp.gnu.org/gnu/screen/screen-4.9.0.tar.gz
+tar axvf screen-4.9.0.tar.gz
+cd screen-4.9.0
+sh autogen.sh
+sed -i 's!-lncurses !-l:${BASE_DIR}/ncurses-6.3/build-output/lib/libncurses.a!g' configure.ac
+./configure CC=${CROSS_GCC} --host=armv7 --prefix=$(pwd)/build-output --enable-colors256 \
+            CFLAGS="-I${BASE_DIR}/ncurses-6.3/build-output/include -L${BASE_DIR}/ncurses-6.3/build-output/lib -l:${BASE_DIR}/ncurses-6.3/build-output/lib/libncurses.a"
 make
 make install
 cd ..
