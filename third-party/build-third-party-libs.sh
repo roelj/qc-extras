@@ -16,6 +16,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 CROSS_GCC=$(find /opt/analog/cces-linux-add-in -name "arm-linux-gnueabi-gcc")
+CROSS_ROOT=${CROSS_GCC::-26} # CROSS_GCC without "/bin/arm-linux-gnueabi-gcc"
 BASE_DIR="$(pwd)"
 
 ## LIBCURL
@@ -79,3 +80,13 @@ make
 make install
 cd ..
 
+## VNC Server
+# -------------------------------------------------------------------------------
+curl -LO https://github.com/LibVNC/libvncserver/archive/refs/tags/LibVNCServer-0.9.14.tar.gz
+tar axvf LibVNCServer-0.9.14.tar.gz
+cd libvncserver-LibVNCServer-0.9.14
+mkdir build
+cd build
+cmake -DWITH_SYSTEMD=OFF -DWITH_GNUTLS=OFF -DWITH_OPENSSL=OFF -DWITH_FFMPEG=OFF -DCMAKE_C_COMPILER="${CROSS_GCC}" -DCMAKE_FIND_ROOT_PATH="${CROSS_ROOT}" -DCMAKE_C_FLAGS="-I${CROSS_ROOT}/include" -DCMAKE_INSTALL_PREFIX="$(pwd)/../build-output" ..
+make CC=${CROSS_GCC}
+cd ../..
