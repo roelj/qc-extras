@@ -80,6 +80,17 @@ make
 make install
 cd ..
 
+## OpenSSL
+# -----------------------------------------------------------------------------
+curl -LO https://www.openssl.org/source/openssl-1.1.1s.tar.gz
+tar axvf openssl-1.1.1s.tar.gz
+cd openssl-1.1.1s
+CROSS_GCC_PREFIX="${CROSS_GCC::-3}"
+OPENSSL_BUILD_OUTPUT="$(pwd)/build-output"
+./Configure linux-generic32 shared --cross-compile-prefix="${CROSS_GCC_PREFIX}" --prefix="${OPENSSL_BUILD_OUTPUT}" --openssldir="${OPENSSL_BUILD_OUTPUT}"
+make
+make install
+cd ..
 ## VNC Server
 # -------------------------------------------------------------------------------
 curl -LO https://github.com/LibVNC/libvncserver/archive/refs/tags/LibVNCServer-0.9.14.tar.gz
