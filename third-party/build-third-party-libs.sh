@@ -18,6 +18,7 @@
 CROSS_GCC=$(find /opt/analog/cces-linux-add-in -name "arm-linux-gnueabi-gcc")
 CROSS_ROOT=${CROSS_GCC::-26} # CROSS_GCC without "/bin/arm-linux-gnueabi-gcc"
 BASE_DIR="$(pwd)"
+BUILD_OUTPUT_DIR="${BASE_DIR}/sysroot"
 
 ## LIBCURL
 # -----------------------------------------------------------------------------
@@ -28,7 +29,7 @@ BASE_DIR="$(pwd)"
 curl -LO https://curl.se/download/curl-7.86.0.tar.gz
 tar axvf curl-7.86.0.tar.gz
 cd curl-7.86.0
-./configure CC=${CROSS_GCC} --host=armv7 --prefix=$(pwd)/build-output --without-ssl
+./configure CC=${CROSS_GCC} --host=armv7 --prefix="${BUILD_OUTPUT_DIR}" --without-ssl
 make
 make install
 cd ..
@@ -41,7 +42,7 @@ cd ..
 curl -LO https://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-0.9.75.tar.gz
 tar axvf libmicrohttpd-0.9.75.tar.gz
 cd libmicrohttpd-0.9.75
-./configure CC=${CROSS_GCC} --host=armv7 --prefix=$(pwd)/build-output --enable-itc=pipe
+./configure CC=${CROSS_GCC} --host=armv7 --prefix="${BUILD_OUTPUT_DIR}" --enable-itc=pipe
 make
 make install
 cd ..
@@ -54,7 +55,7 @@ cd ..
 curl -LO https://github.com/protobuf-c/protobuf-c/releases/download/v1.4.1/protobuf-c-1.4.1.tar.gz
 tar axvf protobuf-c-1.4.1.tar.gz
 cd protobuf-c-1.4.1
-./configure CC=${CROSS_GCC} --host=armv7 --prefix=$(pwd)/build-output --disable-protoc
+./configure CC=${CROSS_GCC} --host=armv7 --prefix="${BUILD_OUTPUT_DIR}" --disable-protoc
 make
 make install
 cd ..
@@ -64,7 +65,7 @@ cd ..
 curl -LO https://ftp.gnu.org/pub/gnu/ncurses/ncurses-6.3.tar.gz
 tar axvf ncurses-6.3.tar.gz
 cd ncurses-6.3
-./configure CC=${CROSS_GCC} --host=armv7 --prefix=$(pwd)/build-output
+./configure CC=${CROSS_GCC} --host=armv7 --prefix="${BUILD_OUTPUT_DIR}"
 make
 make install
 cd ..
@@ -73,9 +74,9 @@ curl -LO https://ftp.gnu.org/gnu/screen/screen-4.9.0.tar.gz
 tar axvf screen-4.9.0.tar.gz
 cd screen-4.9.0
 sh autogen.sh
-sed -i 's!-lncurses !-l:${BASE_DIR}/ncurses-6.3/build-output/lib/libncurses.a!g' configure.ac
-./configure CC=${CROSS_GCC} --host=armv7 --prefix=$(pwd)/build-output --enable-colors256 \
-            CFLAGS="-I${BASE_DIR}/ncurses-6.3/build-output/include -L${BASE_DIR}/ncurses-6.3/build-output/lib -l:${BASE_DIR}/ncurses-6.3/build-output/lib/libncurses.a"
+sed -i 's!-lncurses !-l:${BUILD_OUTPUT_DIR}/lib/libncurses.a!g' configure.ac
+./configure CC=${CROSS_GCC} --host=armv7 --prefix="${BUILD_OUTPUT_DIR}" --enable-colors256 \
+            CFLAGS="-I${BUILD_OUTPUT_DIR}/include -L${BUILD_OUTPUT_DIR}/lib -l:${BUILD_OUTPUT_DIR}/lib/libncurses.a"
 make
 make install
 cd ..
@@ -86,8 +87,7 @@ curl -LO https://www.openssl.org/source/openssl-1.1.1s.tar.gz
 tar axvf openssl-1.1.1s.tar.gz
 cd openssl-1.1.1s
 CROSS_GCC_PREFIX="${CROSS_GCC::-3}"
-OPENSSL_BUILD_OUTPUT="$(pwd)/build-output"
-./Configure linux-generic32 shared --cross-compile-prefix="${CROSS_GCC_PREFIX}" --prefix="${OPENSSL_BUILD_OUTPUT}" --openssldir="${OPENSSL_BUILD_OUTPUT}"
+./Configure linux-generic32 shared --cross-compile-prefix="${CROSS_GCC_PREFIX}" --prefix="${BUILD_OUTPUT_DIR}" --openssldir="${BUILD_OUTPUT_DIR}"
 make
 make install
 cd ..
@@ -98,6 +98,6 @@ tar axvf LibVNCServer-0.9.14.tar.gz
 cd libvncserver-LibVNCServer-0.9.14
 mkdir build
 cd build
-cmake -DWITH_SYSTEMD=OFF -DWITH_GNUTLS=OFF -DWITH_OPENSSL=OFF -DWITH_FFMPEG=OFF -DCMAKE_C_COMPILER="${CROSS_GCC}" -DCMAKE_FIND_ROOT_PATH="${CROSS_ROOT}" -DCMAKE_C_FLAGS="-I${CROSS_ROOT}/include" -DCMAKE_INSTALL_PREFIX="$(pwd)/../build-output" ..
+cmake -DWITH_SYSTEMD=OFF -DWITH_GNUTLS=OFF -DWITH_OPENSSL=OFF -DWITH_FFMPEG=OFF -DCMAKE_C_COMPILER="${CROSS_GCC}" -DCMAKE_FIND_ROOT_PATH="${CROSS_ROOT}" -DCMAKE_C_FLAGS="-I${CROSS_ROOT}/include" -DCMAKE_INSTALL_PREFIX="${BUILD_OUTPUT_DIR}" ..
 make CC=${CROSS_GCC}
 cd ../..
