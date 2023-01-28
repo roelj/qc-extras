@@ -91,6 +91,7 @@ CROSS_GCC_PREFIX="${CROSS_GCC::-3}"
 make
 make install
 cd ..
+
 ## VNC Server
 # -------------------------------------------------------------------------------
 curl -LO https://github.com/LibVNC/libvncserver/archive/refs/tags/LibVNCServer-0.9.14.tar.gz
@@ -101,3 +102,13 @@ cd build
 cmake -DWITH_SYSTEMD=OFF -DWITH_GNUTLS=OFF -DWITH_OPENSSL=OFF -DWITH_FFMPEG=OFF -DCMAKE_C_COMPILER="${CROSS_GCC}" -DCMAKE_FIND_ROOT_PATH="${CROSS_ROOT}" -DCMAKE_C_FLAGS="-I${CROSS_ROOT}/include" -DCMAKE_INSTALL_PREFIX="${BUILD_OUTPUT_DIR}" ..
 make CC=${CROSS_GCC}
 cd ../..
+## Python 3
+## ------------------------------------------------------------------------------
+curl -LO https://www.python.org/ftp/python/3.11.1/Python-3.11.1.tgz
+tar axvf Python-3.11.1.tgz
+cd Python-3.11.1
+printf "ac_cv_file__dev_ptmx=no\nac_cv_file__dev_ptc=no\n" > config.site
+CONFIG_SITE=config.site ./configure CC=${CROSS_GCC} --host=arm-linux-gnueabi --build="$(uname -m)" --prefix="${BUILD_OUTPUT_DIR}" --with-build-python --disable-ipv6 --enable-optimizations
+make
+make install
+
