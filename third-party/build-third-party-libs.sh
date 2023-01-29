@@ -112,6 +112,7 @@ printf "ac_cv_file__dev_ptmx=no\nac_cv_file__dev_ptc=no\n" > config.site
 CONFIG_SITE=config.site ./configure CC=${CROSS_GCC} --host=arm-linux-gnueabi --build="$(uname -m)" --prefix="${BUILD_OUTPUT_DIR}" --with-build-python --disable-ipv6 --enable-optimizations
 make
 make install
+cd ..
 
 ## ZLIB
 ## ------------------------------------------------------------------------------
@@ -121,6 +122,7 @@ cd zlib-1.2.13
 CROSS_PREFIX="${CROSS_GCC_PREFIX}" CFLAGS="-m32" ./configure --prefix="${BUILD_OUTPUT_DIR}"
 make
 make install
+cd ..
 
 ## XZ
 ## ------------------------------------------------------------------------------
@@ -130,6 +132,7 @@ cd xz-5.4.1
 ./configure CC=${CROSS_GCC} --host=armv7 --prefix="${BUILD_OUTPUT_DIR}"
 make
 make install
+cd ..
 
 ## LIBXML2
 ## ------------------------------------------------------------------------------
@@ -139,4 +142,5 @@ cd libxml2-2.9.14
 ./configure CC=${CROSS_GCC} --host=armv7 --without-python --prefix="${BUILD_OUTPUT_DIR}" CFLAGS="-I${BUILD_OUTPUT_DIR}/include -L${BUILD_OUTPUT_DIR}/lib"
 make
 make install
+cd ..
 
