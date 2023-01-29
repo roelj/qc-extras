@@ -131,3 +131,12 @@ cd xz-5.4.1
 make
 make install
 
+## LIBXML2
+## ------------------------------------------------------------------------------
+curl -LO https://download.gnome.org/sources/libxml2/2.9/libxml2-2.9.14.tar.xz
+tar axvf libxml2-2.9.14.tar.xz
+cd libxml2-2.9.14
+./configure CC=${CROSS_GCC} --host=armv7 --without-python --prefix="${BUILD_OUTPUT_DIR}" CFLAGS="-I${BUILD_OUTPUT_DIR}/include -L${BUILD_OUTPUT_DIR}/lib"
+make
+make install
+
