@@ -149,7 +149,7 @@ cd ..
 curl -LO https://www.zlib.net/zlib-1.2.13.tar.gz
 tar axvf zlib-1.2.13.tar.gz
 cd zlib-1.2.13
-CROSS_PREFIX="${CROSS_GCC_PREFIX}" CFLAGS="-m32" ./configure --prefix="${BUILD_OUTPUT_DIR}"
+CROSS_PREFIX="${CROSS_GCC_PREFIX}" ./configure --prefix="${BUILD_OUTPUT_DIR}"
 make
 make install
 cd ..
