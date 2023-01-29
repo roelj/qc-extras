@@ -41,6 +41,16 @@ make
 make install
 cd ..
 
+## Nettle
+## ----------------------------------------------------------------------------
+curl -LO https://ftp.gnu.org/gnu/nettle/nettle-3.8.1.tar.gz
+tar axvf nettle-3.8.1.tar.gz
+cd nettle-3.8.1
+./configure CC=${CROSS_GCC} CFLAGS="-I${BUILD_OUTPUT_DIR}/include -L${BUILD_OUTPUT_DIR}/lib" --host=arm-linux-gnueabi --prefix="${BUILD_OUTPUT_DIR}"
+make
+make install
+cd ..
+
 ## LIBCURL
 # -----------------------------------------------------------------------------
 # Build without SSL, we will use the library installed on the Quad Cortex
