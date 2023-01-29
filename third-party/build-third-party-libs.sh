@@ -16,6 +16,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 CROSS_GCC=$(find /opt/analog/cces-linux-add-in -name "arm-linux-gnueabi-gcc")
+CROSS_GCC_PREFIX="${CROSS_GCC::-3}"
 CROSS_ROOT=${CROSS_GCC::-26} # CROSS_GCC without "/bin/arm-linux-gnueabi-gcc"
 BASE_DIR="$(pwd)"
 BUILD_OUTPUT_DIR="${BASE_DIR}/sysroot"
@@ -86,7 +87,6 @@ cd ..
 curl -LO https://www.openssl.org/source/openssl-1.1.1s.tar.gz
 tar axvf openssl-1.1.1s.tar.gz
 cd openssl-1.1.1s
-CROSS_GCC_PREFIX="${CROSS_GCC::-3}"
 ./Configure linux-generic32 shared --cross-compile-prefix="${CROSS_GCC_PREFIX}" --prefix="${BUILD_OUTPUT_DIR}" --openssldir="${BUILD_OUTPUT_DIR}"
 make
 make install
