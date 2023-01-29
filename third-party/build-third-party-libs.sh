@@ -122,3 +122,12 @@ CROSS_PREFIX="${CROSS_GCC_PREFIX}" CFLAGS="-m32" ./configure --prefix="${BUILD_O
 make
 make install
 
+## XZ
+## ------------------------------------------------------------------------------
+curl -LO https://tukaani.org/xz/xz-5.4.1.tar.gz
+tar axvf xz-5.4.1.tar.gz
+cd xz-5.4.1
+./configure CC=${CROSS_GCC} --host=armv7 --prefix="${BUILD_OUTPUT_DIR}"
+make
+make install
+
