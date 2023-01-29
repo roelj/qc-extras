@@ -21,6 +21,16 @@ CROSS_ROOT=${CROSS_GCC::-26} # CROSS_GCC without "/bin/arm-linux-gnueabi-gcc"
 BASE_DIR="$(pwd)"
 BUILD_OUTPUT_DIR="${BASE_DIR}/sysroot"
 
+## libunistring
+## ----------------------------------------------------------------------------
+curl -LO https://ftp.gnu.org/gnu/libunistring/libunistring-1.1.tar.gz
+tar axvf libunistring-1.1.tar.gz
+cd libunistring-1.1
+./configure CC=${CROSS_GCC} --host=armv7 --prefix="${BUILD_OUTPUT_DIR}"
+make
+make install
+cd ..
+
 ## LIBCURL
 # -----------------------------------------------------------------------------
 # Build without SSL, we will use the library installed on the Quad Cortex
