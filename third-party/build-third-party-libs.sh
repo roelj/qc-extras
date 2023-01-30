@@ -112,6 +112,16 @@ make
 make install
 cd ..
 
+## strace
+## ----------------------------------------------------------------------------
+curl -LO https://github.com/strace/strace/releases/download/v6.1/strace-6.1.tar.xz
+tar axvf strace-6.1.tar.xz
+cd strace-6.1
+./configure CC=${CROSS_GCC} --host=armv7 --prefix="${BUILD_OUTPUT_DIR}"
+make
+make install
+cd ..
+
 ## OpenSSL
 # -----------------------------------------------------------------------------
 curl -LO https://www.openssl.org/source/openssl-1.1.1s.tar.gz
