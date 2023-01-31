@@ -122,6 +122,24 @@ make
 make install
 cd ..
 
+## valgrind
+## ----------------------------------------------------------------------------
+curl -LO https://sourceware.org/pub/valgrind/valgrind-3.20.0.tar.bz2
+tar axvf valgrind-3.20.0.tar.bz2
+cd valgrind-3.20.0
+
+## Patch the Makefiles.
+FILES_TO_PATCH=$(grep -lr "mcpu=cortex-a8" . | sort | uniq)
+while IFS= read -r filename
+do
+   sed -i 's/-mcpu=cortex-a8//g' "$filename"
+done < <(printf '%s\n' "${FILES_TO_PATCH}")
+
+./configure --target=arm-linux-gnueabi --host=armv7-arm-linux-gnueabi CC="${CROSS_GCC_PREFIX}gcc" CPP="${CROSS_GCC_PREFIX}cpp" CXX="${CROSS_GCC_PREFIX}g++" LD="${CROSS_GCC_PREFIX}ld" AR="${CROSS_GCC_PREFIX}ar" --prefix="${BUILD_OUTPUT_DIR}"
+make
+make install
+cd ..
+
 ## OpenSSL
 # -----------------------------------------------------------------------------
 curl -LO https://www.openssl.org/source/openssl-1.1.1s.tar.gz
