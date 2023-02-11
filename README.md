@@ -55,3 +55,18 @@ make install
 
 The `qc-controller` binary is meant to run on the Quad Cortex, so copy it to
 the device and run it from there.
+
+## Running the cross-compiled code on the development machine
+
+Using `qemu-user-static-arm` we can run the ARM binaries on the development machine.
+The toolchain provides a minimal sysroot to use:
+```
+export QEMU_LD_PREFIX="/opt/analog/cces-linux-add-in/1.3.1/ARM/arm-linux-gnueabi/sysroot"
+```
+
+With this in place, we can run our program with `./qc-controller`. As a bonus example,
+let's run it using `valgrind` to find memory leaks:
+```
+third-party/sysroot/bin/valgrind --leak-check=full ./qc-controller
+```
+
